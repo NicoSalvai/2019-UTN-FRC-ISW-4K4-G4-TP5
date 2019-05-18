@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ISW">
+    <output-path>$PROJECT_DIR$/out/artifacts/ISW</output-path>
+    <root id="archive" name="ISW.jar">
+      <element id="module-output" name="ISW" />
+    </root>
+  </artifact>
+</component>

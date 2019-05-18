@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<title> Tablas Dinamicas</title>
+ 
+<script type="text/javascript">
+
+function listarProductos() {
+  
+ 
+  $.ajax({
+        'url': "generarReporte.jsp",
+        'type': "POST",
+        'async': true,
+        'dataType': "json",
+        'success': function(data) {
+          
+          $.each( data, function( key, value ) {
+            guardarProductosEnCarrito(value.nombre,value.precio);
+            });
+          
+
+        },
+        'complete': function() {
+        
+        }
+    });
+
+} 
+  function guardarProductosEnCarrito(nombre,precio) {
+    var tabla = document.getElementById("factura");
+ //alert(values);
+ var fila = tabla.insertRow();
+ 
+ var celda1 = fila.insertCell(0);
+ var celda2 = fila.insertCell(1);
+ var celda3 = fila.insertCell(2);
+ var celda4 = fila.insertCell(3);
+ 
+ var campo1 = document.createElement("label");
+     campo1.type = "text";
+     campo1.innerHTML=nombre;
+     campo1.value=nombre;
+
+ var campo2 = document.createElement("label");
+ 
+ 
+    campo2.type = "text";
+     campo2.innerHTML=precio;
+     campo2.value=precio;
+    
+ var campo3 = document.createElement("select");
+ campo3.className="form-control";
+
+ campo3.innerHTML="<option value='1'>1</option>"+
+                  "<option value='2'>2</option> "+
+                  "<option value='3'>3</option>"+
+                  "<option value='4'>4</option>"+
+                  "<option value='5'>5</option>";
+
+ var campo4 = document.createElement("input");
+     campo4.type = "button";
+     campo4.value = "Agregar a Carrito";
+     campo4.onclick = function() {
+     
+        $.ajax({
+        'url': "generarReporte.jsp",
+        'type': "POST",
+        'async': true,
+        'dataType': "text",
+        'data': {campo1 : campo1.value},
+        'success': function(data) {
+            
+        },
+        'complete': function() {
+        
+        }
+    });
+
+         
+     }
+ 
+ celda1.appendChild(campo1);
+ celda2.appendChild(campo2);
+ celda3.appendChild(campo3);
+ celda4.appendChild(campo4);
+    
+
+}
+
+
+</script>
+<style>
+    td {
+        
+        width:160px;
+            
+    }
+</style>
+</head>
+ 
+<body onload="listarProductos();">
+  <div class="container">
+    <h2>Lista de Productos</h2>       
+    <table class="table"  id="factura" cellpadding="5" cellspacing="5">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Precio</th>
+          <th>Cantidad</th>
+         
+        </tr>
+        
+      </thead>
+      <tbody>
+    
+      </tbody>
+    </table>
+  </div>
+ 
+</body>
+</html>
