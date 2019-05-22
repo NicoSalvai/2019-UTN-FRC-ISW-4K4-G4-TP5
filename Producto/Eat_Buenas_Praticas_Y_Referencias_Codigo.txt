@@ -1,0 +1,9 @@
+Paginas consultadas para buenas practicas de codigo y documentacion de los lenguajes utilizados
+
+https://medium.com/@sergiodxa/buenas-pr%C3%A1cticas-del-desarrollo-frontend-40f44621841
+https://getbootstrap.com/docs/4.3/getting-started/introduction/
+https://docs.oracle.com/en/java/javase/12/
+https://redmint.gitbook.io/buenas-practicas-front-end/
+https://medium.com/@davidenq/gu%C3%ADa-de-estilo-convenciones-y-buenas-pr%C3%A1cticas-de-desarrollo-con-javascript-d2e9ef80d63b
+https://es.stackoverflow.com/
+http://jstherightway.org/es-es/
