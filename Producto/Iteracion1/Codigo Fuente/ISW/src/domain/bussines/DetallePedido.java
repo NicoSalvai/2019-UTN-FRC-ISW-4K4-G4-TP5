@@ -27,4 +27,7 @@ public class DetallePedido {
     public float calcularParcial(){
         return producto.getPrecio()*cantidad;
     }
+    public boolean esProducto(int codigo){
+    	return producto.esCodigo(codigo);
+    }
 }

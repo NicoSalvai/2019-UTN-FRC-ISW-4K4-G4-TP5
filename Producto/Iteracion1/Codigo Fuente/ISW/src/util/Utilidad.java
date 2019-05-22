@@ -37,7 +37,47 @@ public  class Utilidad {
 
         return lista;
     }
+    public static ArrayList<DetallePedido> listaProd(){
+        ArrayList<DetallePedido> lista = new ArrayList<>();
 
+        lista.add(DetallePedidoBuilder.aDetallePedido().withProducto(ProductoBuilder.aProducto().withNombre("Fideos").withCodigo(1).withPrecio(50.25f).build()).withCantidad(1).build());
+        lista.add(DetallePedidoBuilder.aDetallePedido().withProducto(ProductoBuilder.aProducto().withNombre("Manteca").withCodigo(2).withPrecio(25.50f).build()).withCantidad(1).build());
+        lista.add(DetallePedidoBuilder.aDetallePedido().withProducto(ProductoBuilder.aProducto().withNombre("Doritos").withCodigo(3).withPrecio(10f).build()).withCantidad(1).build());
+        lista.add(DetallePedidoBuilder.aDetallePedido().withProducto(ProductoBuilder.aProducto().withNombre("Cerveza Patagonia").withCodigo(4).withPrecio(100.20f).build()).withCantidad(1).build());
+        lista.add(DetallePedidoBuilder.aDetallePedido().withProducto(ProductoBuilder.aProducto().withNombre("Dignidad").withCodigo(6).withPrecio(0.1f).build()).withCantidad(0).build());
+        return lista;
+    }
+    public static ArrayList<DetallePedido> listaCarro(){
+        ArrayList<DetallePedido> lista = new ArrayList<>();
+
+        lista.add(DetallePedidoBuilder.aDetallePedido().withProducto(ProductoBuilder.aProducto().withNombre("Fideos").withCodigo(1).withPrecio(50.25f).build()).withCantidad(0).build());
+        lista.add(DetallePedidoBuilder.aDetallePedido().withProducto(ProductoBuilder.aProducto().withNombre("Manteca").withCodigo(2).withPrecio(25.50f).build()).withCantidad(0).build());
+        lista.add(DetallePedidoBuilder.aDetallePedido().withProducto(ProductoBuilder.aProducto().withNombre("Doritos").withCodigo(3).withPrecio(10f).build()).withCantidad(0).build());
+        lista.add(DetallePedidoBuilder.aDetallePedido().withProducto(ProductoBuilder.aProducto().withNombre("Cerveza Patagonia").withCodigo(4).withPrecio(100.20f).build()).withCantidad(0).build());
+        lista.add(DetallePedidoBuilder.aDetallePedido().withProducto(ProductoBuilder.aProducto().withNombre("Dignidad").withCodigo(6).withPrecio(0.1f).build()).withCantidad(1).build());
+        return lista;
+    }
+    
+    
+    public static JsonArray pasarAJson(ArrayList<DetallePedido> listaDetalle){
+
+        JsonArray jsonArray = new JsonArray();
+        JsonObject jsonObject, jsonProducto ;
+        for (DetallePedido detallePedido : listaDetalle
+        ) {
+            jsonObject= new JsonObject() ;
+            jsonProducto = new JsonObject() ;
+            jsonObject.addProperty("cantidad", detallePedido.getCantidad());
+            jsonProducto.addProperty("nombre", detallePedido.getProducto().getNombre());
+            jsonProducto.addProperty("precio", detallePedido.getProducto().getPrecio());
+            jsonProducto.addProperty("codigo", detallePedido.getProducto().getCodigo());
+            jsonObject.add("producto", jsonProducto);
+            jsonArray.add(jsonObject);
+        }
+        return  jsonArray;
+    }
+    
+    
     public static DetallePedido productoAleatorio(){
         return DetallePedidoBuilder.aDetallePedido().withCantidad((int)(Math.random() * 5)).withProducto(listaProductos().get((int)(Math.random() * 5))).build();
     }

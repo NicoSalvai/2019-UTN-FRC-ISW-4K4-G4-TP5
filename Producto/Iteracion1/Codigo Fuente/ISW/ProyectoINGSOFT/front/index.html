@@ -10,18 +10,288 @@
  
 <script type="text/javascript">
 
-function listarProductos() {
+function TryParseInt(str,defaultValue) {
+     var retValue = defaultValue;
+     if(str !== null) {
+         if(str.length > 0) {
+             if (!isNaN(str)) {
+                 retValue = parseInt(str);
+             }
+         }
+     }
+     return retValue;
+}
+function checkForm(hentrega, fentrega)
+  {
+    // regular expression to match required date format
+    re = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+
+    if(fentrega != '') {
+      if(regs = fentrega.match(re)) {
+        // day value between 1 and 31
+        if(regs[1] < 1 || regs[1] > 31) {
+          alert("Valor de dias incorrecto: " + regs[1]);          
+          return false;
+        }
+        // month value between 1 and 12
+        if(regs[2] < 1 || regs[2] > 12) {
+          alert("Valor de mes incorrecto: " + regs[2]);
+          
+          return false;
+        }
+        // year value between 1902 and 2019
+        if( regs[3] < (new Date()).getFullYear()) {
+          alert("fecha invalida: " + regs[3] );
+         
+          return false;
+        }
+      } else {
+        alert("Formato no valido: " + form.startdate.value);
+        
+        return false;
+      }
+    }
+
+    // regular expression to match required time format
+    re = /^(\d{1,2}):(\d{2})([ap]m)?$/;
+
+    if(hentrega != '') {
+      if(regs = hentrega.match(re)) {
+        if(regs[3]) {
+          // 12-hour value between 1 and 12
+          if(regs[1] < 1 || regs[1] > 12) {
+            alert("Valor de hora no valido: " + regs[1]);
+            
+            return false;
+          }
+        } else {
+          // 24-hour value between 0 and 23
+          if(regs[1] > 23) {
+            alert("Valor de hora no valido: " + regs[1]);
+            
+            return false;
+          }
+        }
+        // minute value between 0 and 59
+        if(regs[2] > 59) {
+          alert("Valor de minuto no valido: " + regs[2]);
+          
+          return false;
+        }
+      } else {
+        alert("formato de hora no valido: " + form.starttime.value);
+        
+        return false;
+      }
+    }
+
+    
+    return true;
+  }
+
+
+function guardar() {
+
   
+  let bandera =new Boolean(false);
+
+  if(document.getElementById("adr").value.length<1){
+   alert("Ingrese Direccion");
+   document.getElementById("ccnum").value="";
+   bandera =true;
+   }
+   if(TryParseInt(document.getElementById("numero").value,0)==0){
+   alert("El número del domicilio no es valido");
+   document.getElementById("numero").value="";
+   bandera =true;
+   }
+
+  var x = document.getElementById("entregoIn");
+  if (!x.checked) {
+    x = document.getElementById("entregoFecha");
+    if (!x.checked) {
+      alert("Seleccione Tipo Entrega");
+      bandera =true;
+    } else {      
+      var fentrega = document.getElementById("fechaen").value ;
+      var hentrega = document.getElementById("hren").value;
+      if(hentrega==""|| fentrega==""){
+        alert("Ingrese Hora y fecha de entrega");
+        bandera=true;
+      }else{
+        bandera = !checkForm(hentrega,fentrega);
+      }
+     
+    }
+  } 
+    
+                                      
+   x = document.getElementById("divEfec");
+  if (x.style.display === "block") {
+    if (document.getElementById("cEfectivo").value==""){
+      alert("Ingresar Monto Efectivo");
+       document.getElementById("cEfectivo").value="";
+       bandera=true;
+    }
+    if(!document.getElementById("cEfectivo").value==""){ 
+      if(TryParseInt(document.getElementById("cEfectivo").value,0)==0){
+       alert("El número contiene letras, por favor ingreselo nuevamente ");
+       document.getElementById("cEfectivo").value="";
+       bandera=true;
+     }
+     else{
+       var efectivo = document.getElementById("cEfectivo").value;
+       var total = document.getElementById("total").value;
+      if(parseFloat(efectivo) < parseFloat(total))
+        { 
+          alert("El monto abonado es menor al total");
+          document.getElementById("ccnum").value="";
+          bandera=true;
+        }
+   
+          }
+    }
+
+   }
+
+
+
+else{
+
+  if(!document.getElementById("cname").value==""){
+  if(document.getElementById("cname").value.length<1){
+   alert("Ingrese el Nombre que Aparece en la tarjeta");
+   document.getElementById("cname").value="";
+   bandera =true;
+   }
+   }else{
+    alert("Ingrese el Nombre que Aparece en la tarjeta");
+   document.getElementById("cname").value="";
+   bandera =true;
+   }
+
+if(!document.getElementById("ccnum").value==""){
+  if(document.getElementById("ccnum").value.length<1){
+   alert("Ingrese un Numero de tarjeta");
+   document.getElementById("ccnum").value="";
+   bandera =true;
+   }
+  
+ if(TryParseInt(document.getElementById("ccnum").value,0)==0){
+   alert("El número contiene letras, por favor ingreselo nuevamente ");
+   document.getElementById("ccnum").value="";
+   bandera =true;
+   }
+    else{
+
+    if(!document.getElementById("ccnum").value.startsWith("4"))
+       { alert("El numero de tarjeta ingresado no correponde a una Tarjeta Visa");
+            document.getElementById("ccnum").value="";
+            bandera =true;
+       }
+       else {
+         if( document.getElementById("ccnum").value.length != 16){
+          alert("El numero de tarjeta ingresado debe contener 16 digitos");
+          bandera =true;
+              }
+       }
+  }
+}
+ else{
+   
+  bandera =true;
+   alert("El número de tarjeta esta vacio, por favor ingreselo ");
+  
+ 
+ }
+ if(!document.getElementById("expmonth").value==""){
+
+                    if(TryParseInt(document.getElementById("expmonth").value,0)==0){
+                     alert("El Mes contiene letras, por favor ingreselo nuevamente ");
+                     document.getElementById("expmonth").value="";
+                     bandera =true;
+                    }
+                    else{
+                    
+                    if(document.getElementById("expmonth").value > 12 || document.getElementById("expmonth").value < 0)
+                      { bandera =true;
+                           alert("El Mes no existe, por favor ingrese nuevamente el mes");
+                           document.getElementById("ccnum").value="";
+                      }
+                    
+                    }
+ }
+ else
+ { bandera =true; 
+ alert("El mes esta vacio, por favor ingreselo ");
+ }
+ if(!document.getElementById("expyear").value=="")
+ {
+
+if(TryParseInt(document.getElementById("expyear").value,0)==0)
+{             bandera =true;
+             alert("El año contiene letras, por favor ingreselo nuevamente ");
+             document.getElementById("expyear").value="";
+            }
+            else{
+            
+            if(document.getElementById("expyear").value < 2018 )
+              {     bandera =true;
+                   alert("El año no existe, por favor ingrese nuevamente el mes");
+                   document.getElementById("expyear").value="";
+              }
+            
+            }
+}
+else{
+  bandera =true;
+  
+  alert("El año esta vacio, por favor ingreselo ");}
+
+if(!document.getElementById("expyear").value==""){
+
+        if(TryParseInt(document.getElementById("cvv").value,0)==0)
+          
+        {     
+              bandera =true;
+             alert("El codigo contiene letras, por favor ingreselo nuevamente ");
+             document.getElementById("cvv").value="";
+            }
+            else{
+            
+            if(document.getElementById("cvv").value.length !=3 )
+              { 
+                   bandera =true;
+                   alert("El codigo no existe, por favor ingrese nuevamente el codigo");
+                   document.getElementById("cvv").value="";
+              }
+            
+            }
+        }
+else{alert("El codigo esta vacio, por favor ingreselo ");
+bandera =true;}
+
+
+}
+if(bandera==false){
+alert("Se registro la compra ");
+
+}
+}
+
+function listarProductos() {
+  cargarProductoEnCarritoIncio();
  
   $.ajax({
         'url': "generarReporte.jsp",
         'type': "POST",
         'async': true,
         'dataType': "json",
+        'data': {insert:"no"},
         'success': function(data) {
           
           $.each( data, function( key, value ) {
-            guardarProductosEnCarrito(value.nombre,value.precio);
+            cargarProductos(value.nombre,value.precio,value.codigo);
             });
           
 
@@ -32,96 +302,563 @@ function listarProductos() {
     });
 
 } 
-  function guardarProductosEnCarrito(nombre,precio) {
-    var tabla = document.getElementById("factura");
- //alert(values);
- var fila = tabla.insertRow();
- 
- var celda1 = fila.insertCell(0);
- var celda2 = fila.insertCell(1);
- var celda3 = fila.insertCell(2);
- var celda4 = fila.insertCell(3);
- 
- var campo1 = document.createElement("label");
-     campo1.type = "text";
-     campo1.innerHTML=nombre;
-     campo1.value=nombre;
 
- var campo2 = document.createElement("label");
- 
- 
-    campo2.type = "text";
-     campo2.innerHTML=precio;
-     campo2.value=precio;
-    
- var campo3 = document.createElement("select");
- campo3.className="form-control";
 
- campo3.innerHTML="<option value='1'>1</option>"+
-                  "<option value='2'>2</option> "+
-                  "<option value='3'>3</option>"+
-                  "<option value='4'>4</option>"+
-                  "<option value='5'>5</option>";
 
- var campo4 = document.createElement("input");
-     campo4.type = "button";
-     campo4.value = "Agregar a Carrito";
-     campo4.onclick = function() {
-     
-        $.ajax({
-        'url': "generarReporte.jsp",
-        'type': "POST",
-        'async': true,
-        'dataType': "text",
-        'data': {campo1 : campo1.value},
-        'success': function(data) {
-            
-        },
-        'complete': function() {
-        
-        }
+
+
+
+function enviarProductos() {
+
+  var json={datos:[{codigo :''},{precio:''},{cantidad:''}]};
+
+  codigo = "";
+  precio = "";
+  cantidad = "";
+  total = 0;
+  var list = {
+  'detallePedido' :[]
+};
+  var datos  = [];
+
+     for (var i=1;i < document.getElementById('productSelected').rows.length; i++){
+                    codigo = document.getElementById('productSelected').rows[i].cells[0].innerText;
+                    precio = document.getElementById('productSelected').rows[i].cells[1].innerText;
+                    cantidad = document.getElementById('productSelected').rows[i].cells[2].innerText;
+                    total=parseFloat(total)+parseFloat(precio);
+                   list.detallePedido.push({ 
+        "cantidad"    : codigo,
+        "precio"  : precio,
+        "producto"    : cantidad 
     });
+     } 
 
+     json = JSON.stringify(list); 
+      var obj = JSON.parse(json); 
+     
+     document.getElementById("listarProductosss").style.display = 'none';
+     document.getElementById("pantalla").style.display = 'block';
+     document.getElementById("#continuar").style.display = 'none';
+     myFunction3(); 
+     var fila = document.getElementById("productSelected").insertRow();
+              var celda1 = fila.insertCell(0);
+       
+             var campo = document.createElement("label");
+             campo.type = "text";
+             campo.id="total";
+             campo.innerHTML="Total : " +total;
+             campo.value=total;
+            
+             celda1.appendChild(campo);
+
+
+
+} 
+
+
+  function cargarProductoEnCarrito(nombre,precioProducto,cantidad,codigo) {
+              
+  
+
+        document.getElementById("#continuar").disabled=false;
+              var fila = document.getElementById("productSelected").insertRow();
+              var celda1 = fila.insertCell(0);
+       
+             var campo = document.createElement("label");
+             campo.type = "text";
+             campo.innerHTML=cantidad;
+             campo.value=cantidad;
+             celda1.appendChild(campo);
+             
+             var celda2 = fila.insertCell(1);
+
+             var campo2 = document.createElement("label");
+             campo2.type = "text";
+             campo2.innerHTML=nombre;
+             campo2.value=nombre;
+
+
+             var celda3 = fila.insertCell(1);
+
+             var campo3 = document.createElement("label");
+             campo3.type = "text";
+             campo3.innerHTML=precioProducto*cantidad;
+             campo3.value=precioProducto*cantidad;
+
+             var celda4 = fila.insertCell(1); 
+
+             var campo4 = document.createElement("button");  
+             campo4.innerText = "X";
+             campo4.className="btn btn-danger" 
+             campo4.onclick = function() {
+              event.preventDefault();
+             $(this).closest('tr').remove();
+             }
+
+
+             celda4.appendChild(campo3);
+             celda3.appendChild(campo2);
+             celda2.appendChild(campo4);
+             celda1.appendChild(campo);
+
+
+             
+          
+           
          
      }
- 
- celda1.appendChild(campo1);
- celda2.appendChild(campo2);
- celda3.appendChild(campo3);
- celda4.appendChild(campo4);
+
+
+     function cargarProductoEnCarritoIncio() {
     
+    $.ajax({
+    'url': "obtenerDatos.jsp",
+    'type': "POST",
+    'async': true,
+    'dataType': "json",
+    'success': function(data) {
+    
+    
+      $.each( data, function( key, value ) {
+      
 
-}
+        if(value.cantidad!=0){
+          
+          var tabla = document.getElementById("productSelected");
+          var fila = tabla.insertRow();
+          var celda1 = fila.insertCell(0);
+          var celda2 = fila.insertCell(0);
+          var celda3 = fila.insertCell(0);
+          var celda4 = fila.insertCell(0);
 
+         var campo = document.createElement("label");
+         campo.type = "text";
+         campo.innerHTML=value.cantidad;
+         campo.value=value.cantidad;
+         celda1.appendChild(campo);
+         
+         
+
+         var campo2 = document.createElement("label");
+         campo2.type = "text";
+         campo2.innerHTML=value.producto.nombre;
+         campo2.value=value.producto.nombre;
+
+
+         
+
+         var campo3 = document.createElement("label");
+         campo3.type = "text";
+         campo3.innerHTML=value.producto.precio;
+         campo3.value=value.producto.precio*value.cantidad;
+
+       
+
+        var campo4 = document.createElement("button");  
+        campo4.innerText = "X";
+        campo4.className="btn btn-danger"
+        campo4.onclick = function() {
+          event.preventDefault();
+             $(this).closest('tr').remove();
+
+              
+             
+             if($("productSelected").length==0)
+             {
+              var tabla = document.getElementById("productSelected");
+              var fila = tabla.insertRow();
+              var celda1 = fila.insertCell(0);
+              var campos = document.createElement("label");
+              campos.type = "text";
+              campos.innerHTML="No existen productos seleccionados";
+              campos.id="nada";
+              celda1.appendChild(campos);
+              document.getElementById("#continuar").disabled=true;
+          
+             
+             }
+             
+        }
+
+
+         celda1.appendChild(campo4);
+         celda2.appendChild(campo2);
+         celda3.appendChild(campo3);
+         celda4.appendChild(campo);
+
+
+    }
+    });
+     
+    },
+    'complete': function() {
+     
+    }
+});
+
+     
+ }
+
+
+
+function cargarProductos(nombre,precio,codigo) {
+  
+ 
+
+
+
+
+    var tabla = document.getElementById("factura");
+   
+    var fila = tabla.insertRow();
+    
+   
+    var celda2 = fila.insertCell(0);
+    var celda3 = fila.insertCell(0);
+    var celda4 = fila.insertCell(1);
+    var celda1 = fila.insertCell(0);
+    
+    var campo1 = document.createElement("label");
+        campo1.type = "text";
+        campo1.innerHTML=nombre;
+        campo1.value=nombre;
+   
+    var campo2 = document.createElement("label");
+    
+        campo2.type = "text";
+        campo2.innerHTML=precio;
+        campo2.value=precio;
+       
+    var campo3 = document.createElement("select");
+    campo3.className="form-control";
+   
+    campo3.innerHTML="<option value='1'>1</option>"+
+                     "<option value='2'>2</option> "+
+                     "<option value='3'>3</option>"+
+                     "<option value='4'>4</option>"+
+                     "<option value='5'>5</option>";
+   
+                
+      var campo4 = document.createElement("button");
+     
+        campo4.innerText = "Agregar a Carrito";
+        campo4.className="btn btn-info"
+        campo4.value = codigo;
+        campo4.onClick = "";
+        campo4.onclick = function() {
+          cargarProductoEnCarrito(campo1.value,campo2.value,campo3.value,codigo);
+            
+        }
+    
+    
+    celda4.appendChild(campo3);
+    celda3.appendChild(campo2);
+    celda2.appendChild(campo4);
+    celda1.appendChild(campo1);
+    
+   }
 
 </script>
 <style>
     td {
         
-        width:160px;
+        width:50px;
             
     }
+    body {
+        font-family: Arial;
+        font-size: 17px;
+        padding: 8px;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .row {
+        display: -ms-flexbox; /* IE10 */
+        display: flex;
+        -ms-flex-wrap: wrap; /* IE10 */
+        flex-wrap: wrap;
+        margin: 0 -16px;
+    }
+
+    .col-25 {
+        -ms-flex: 25%; /* IE10 */
+        flex: 25%;
+    }
+
+    .col-50 {
+        -ms-flex: 50%; /* IE10 */
+        flex: 50%;
+    }
+
+    .col-75 {
+        -ms-flex: 75%; /* IE10 */
+        flex: 75%;
+    }
+
+    .col-25,
+    .col-50,
+    .col-75 {
+        padding: 0 16px;
+    }
+
+    .container {
+        background-color: #f2f2f2;
+        padding: 5px 20px 15px 20px;
+        border: 1px solid lightgrey;
+        border-radius: 3px;
+    }
+
+    input[type=text] {
+        width: 100%;
+        margin-bottom: 20px;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+
+    label {
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .icon-container {
+        margin-bottom: 20px;
+        padding: 7px 0;
+        font-size: 24px;
+    }
+
+    .btn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 12px;
+        margin: 10px 0;
+        border: none;
+        width: 100%;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 17px;
+    }
+
+    .btn:hover {
+        background-color: #45a049;
+    }
+
+    a {
+        color: #2196F3;
+    }
+
+    hr {
+        border: 1px solid lightgrey;
+    }
+
+    span.price {
+        float: right;
+        color: grey;
+    }
+
+    /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (also change the direction - make the "cart" column go on top) */
+    @media (max-width: 800px) {
+        .row {
+            flex-direction: column-reverse;
+        }
+        .col-25 {
+            margin-bottom: 20px;
+        }
+    }
 </style>
+
+
 </head>
  
 <body onload="listarProductos();">
   <div class="container">
-    <h2>Lista de Productos</h2>       
-    <table class="table"  id="factura" cellpadding="5" cellspacing="5">
-      <thead>
-        <tr>
-          <th>Producto</th>
-          <th>Precio</th>
-          <th>Cantidad</th>
-         
-        </tr>
-        
-      </thead>
-      <tbody>
     
-      </tbody>
-    </table>
+    <div class="row">
+      
+      <div  class="col" id="listarProductosss" >
+       
+          <h2>Lista de Productos</h2>     
+          <table class="table"  id="factura" cellpadding="1" cellspacing="1">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+      
+              </tr>
+            </thead>
+            <tbody>
+          
+            </tbody>
+          </table>
+    
+      </div>
+
+      <div  class="col" id="pantalla" style="display: none" >
+          <div  class="row" id="pantalla">
+              <div class="col-75">
+                  <div class="container">
+                     
+            
+                          <div class="row">
+                              <div class="col-50">
+                                  <h3>Direccion</h3>
+                                  
+                                  <label for="adr"><i class="fa fa-address-card-o"></i> Calle</label>
+                                  <input type="text" id="adr" name="address" placeholder="Bv. Arturo Illia">
+                                  <i class="fa fa-user"></i> Numero</label>
+                                  <input type="text" id="numero" name="numero" placeholder="156">
+                                  <label for="city"><i class="fa fa-institution"></i> Ciudad</label>
+                                  
+                                  <select type="form-control" id="city" name="city" placeholder="Córdoba">
+                                  <option value='1'>Cordoba</option>
+                                  <option value='1'>Buenos Aires</option>
+                                </select>
+                                <p></p>  
+                                <label for="state"> Referencia</label>
+
+                                  <input type="text" id="ref" name="referencia" placeholder="Entre Bs As e Ituzaingo">            
+                                  <p>Entrega</p>
+                                    <input type="radio" name="tipoEntrega" id="entregoIn" value="inmediata" onchange="fecha()"> Inmediata<br>
+                                    <input type="radio" name="tipoEntrega" id="entregoFecha" value="fecha" onchange="fecha()"> Elegir Fecha<br>
+                                    <div id="infecha" onload="fecha()"> 
+                                      <label for="state"> Fecha de Entrega:</label>
+                                      <input type="text" id="fechaen" name="fechaen" placeholder="30/05/2019">
+                                      <label for="state"> Hora Entrega:</label>
+                                      <input type="text" id="hren" name="hren" placeholder="17:20">
+                                    </div>
+                                                                                
+
+                              </div>
+            
+                              <div class="col-50">
+                                  <h3>Pago</h3>
+                                  <p>Forma de pago:</p>
+                                  <button type="button" onclick="myFunction()">Efectivo</button>
+                                  <button type="button" onclick="myFunction2()">Tarjeta</button>
+            
+            
+            
+            
+                                  <script>
+                                      
+                                      function fecha() {
+                                          var x = document.getElementById("entregoIn");
+                                          if (x.checked) {
+                                            var d = new Date();
+                                            document.getElementById("fechaen").disabled = true;
+                                            document.getElementById("hren").disabled = true;
+                                            document.getElementById("fechaen").value =  d.getDate()+"/"+d.getMonth()+"/"+d.getFullYear();
+                                            document.getElementById("hren").value =  d.getHours()+":"+d.getMinutes();
+                                          } else {
+                                            document.getElementById("fechaen").disabled = false;
+                                            document.getElementById("hren").disabled = false;
+                                            document.getElementById("fechaen").value =  "";
+                                            document.getElementById("hren").value = "";
+                                          }
+                                      }
+
+
+                                      function myFunction() {
+                                          var x = document.getElementById("divEfec");
+                                          if (x.style.display === "none") {
+                                              x.style.display = "block";
+                                          } else {
+                                              x.style.display = "none";
+                                          }
+                                      }
+            
+                                      function myFunction2() {
+                                          var x = document.getElementById("divTar");
+                                          if (x.style.display === "none") {
+                                              x.style.display = "block";
+                                          } else {
+                                              x.style.display = "none";
+                                          }
+                                      }
+                                      function myFunction1() {
+                                          var x = document.getElementById("divEfec");
+                                          if (x.style.display === "block") {
+                                              x.style.display = "none";
+                                              document.getElementById("divEfec").style.display = "block";
+                                          }
+                                      }
+            
+                                      function myFunction21() {
+                                          var x = document.getElementById("divTar");
+                                          if (x.style.display === "block") {
+                                              x.style.display = "none";
+                                              document.getElementById("divEfec").style.display = "block";
+                                          }
+                                      }
+                                      function myFunction3() {
+                                          myFunction();
+                                          myFunction2();
+                                      }
+                                  </script>
+            
+                                  <div id="divEfec"><label for="cEfectivo"> Cantidad abonada</label>
+                                      <input type="text" id="cEfectivo" name="cantEfectivo" placeholder="100"> </div>
+            
+                                  <label for="fname">Tarjetas Aceptadas </label>
+                                  <div class="icon-container">
+                                      <i class="fa fa-cc-visa" style="color:navy;">Visa</i>
+            
+                                  </div>
+                                  <div id="divTar" onload="myFunction2()">
+                                      <label for="cname">Nombre en Tarjeta</label>
+                                      <input type="text" id="cname" name="cardname" placeholder="Juan Perez">
+                                      <label for="ccnum">Numero</label>
+                                      <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444">
+                                      <label for="expmonth">Mes Ven.</label>
+                                      <input type="text" id="expmonth" name="expmonth" placeholder="05">
+                                      <div class="row">
+                                          <div class="col-50">
+                                              <label for="expyear">Año Ven.</label>
+                                              <input type="text" id="expyear" name="expyear" placeholder="2019">
+                                          </div>
+                                          <div class="col-50">
+                                              <label for="cvv">CVV</label>
+                                              <input type="text" id="cvv" name="cvv" placeholder="352">
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+            
+                          </div>
+                          <label>
+            
+                              <input type="submit" value="Registrar Compra" class="btn" onclick="guardar();">
+                      
+                  </div>
+              </div>
+            
+            </div>
+    
+      
+      </div>
+        <div class="col">   
+            <table class="table"  id="productSelected" cellpadding="1" cellspacing="1">
+                <thead>
+                  <tr>
+                    <th>Productos Seleccionados</th>
+                  </tr>
+                </thead>
+                <tbody>
+              
+                </tbody>
+              </table>
+              
+              <button type="button" class="btn btn-success" id="#continuar" onclick="enviarProductos();" >Continuar con la compra </button>
+          </div>
+          
+        </div>
+   
   </div>
  
-</body>
+  
+</head>
+
 </html>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="C:/meta4ess/M4WS/ess/WEB-INF/lib/gson-2.8.5.jar"/>
+	<classpathentry kind="output" path="out/production/ISW"/>
+</classpath>

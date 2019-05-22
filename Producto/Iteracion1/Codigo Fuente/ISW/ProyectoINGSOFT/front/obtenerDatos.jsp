@@ -21,10 +21,12 @@
 
 
 <%
+
+
+   
+    ArrayList<DetallePedido> lista = Utilidad.listaCarro();
+    JsonArray listaCarro = Utilidad.pasarAJson(lista);
     
-
-    JsonArray listaProductos = Utilidad.productoJson();
-
-    out.print(listaProductos);
-
+    out.print(listaCarro);
+    
 %>
